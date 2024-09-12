@@ -16,17 +16,21 @@ public class CreatePlan : MonoBehaviour
 
     void Start()
     {
-        for (int i = 0; i < nbColonnes; i++)
+
+        for (int y = 0; y < nbLignes; y++)
         {
-            for (int j = 0; j < nbLignes; j++)
+            for (int x = 0; x < nbColonnes; x++)
             {
-                points.Add(new(i, j, 0));
-                points.Add(new(i+1, j, 0));
-                points.Add(new(i, j+1, 0));
-                points.Add(new(i+1,j+1,0));
-                
-                triangles.AddRange(new int[]{0,1,2});
-                triangles.AddRange(new int[]{3,2,1});
+                int t1 = points.Count;
+                points.Add(new(x, y, 0));
+                int t2 = points.Count;
+                points.Add(new(x, y+1, 0));
+                int t3 = points.Count;
+                points.Add(new(x+1, y, 0));
+                int t4 = points.Count;
+                points.Add(new(x+1, y+1, 0));
+                triangles.AddRange(new int[] { t1, t2, t3 });
+                triangles.AddRange(new int[] { t4, t3, t2 });
             }
         }
         
