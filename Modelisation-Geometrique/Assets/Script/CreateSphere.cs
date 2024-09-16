@@ -20,7 +20,7 @@ public class CreateSphere : MonoBehaviour
         }
 
         float theta = 360 / nbMeridiens;
-        float phi = 180 / (nbParalleles + 1);
+        float phi = 180 / nbParalleles;
 
         int indNorthPole = points.Count;
         points.Add(new(0, radius, 0));
@@ -58,7 +58,7 @@ public class CreateSphere : MonoBehaviour
                 {
                     triangles.AddRange(new int[] { t1, t3, indSouthPole });
                 }
-                if (i == 90 - (2 * phi))
+                if (i >= 90 - (2 * phi))
                 {
                     triangles.AddRange(new int[] { t2, indNorthPole, t4 });
                 }
