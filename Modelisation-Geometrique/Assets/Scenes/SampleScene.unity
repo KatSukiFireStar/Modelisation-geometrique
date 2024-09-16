@@ -386,7 +386,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: 1
   nbMeridiens: 10
-  nbParalleles: 4
+  nbParalleles: 10
   material: {fileID: 2100000, guid: b6a1e68dfa8b3c54b9d30b1ddec50825, type: 2}
 --- !u!4 &1309074529
 Transform:

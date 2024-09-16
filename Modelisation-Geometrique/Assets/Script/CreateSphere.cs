@@ -32,19 +32,19 @@ public class CreateSphere : MonoBehaviour
             for (float j = 0; j < 360; j += theta)
             {
                 int t1 = points.Count;
-                points.Add(new Vector3(Mathf.Cos((j * Mathf.PI) / 180) * radius, 
+                points.Add(new Vector3(Mathf.Cos((j * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius, 
                     Mathf.Sin(i * Mathf.PI / 180) * radius,
                     Mathf.Sin((j * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius));
                 int t2 = points.Count;
-                points.Add(new Vector3(Mathf.Cos((j * Mathf.PI) / 180) * radius,
+                points.Add(new Vector3(Mathf.Cos((j * Mathf.PI) / 180) * Mathf.Cos((i+phi) * Mathf.PI / 180) * radius,
                     Mathf.Sin((i + phi) * Mathf.PI / 180) * radius, 
                     Mathf.Sin((j * Mathf.PI) / 180) * Mathf.Cos((i + phi) * Mathf.PI / 180) * radius));
                 int t3 = points.Count;
-                points.Add(new Vector3(Mathf.Cos(((j + theta) * Mathf.PI) / 180) * radius, 
+                points.Add(new Vector3(Mathf.Cos(((j + theta) * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius, 
                     Mathf.Sin(i * Mathf.PI / 180) * radius,
                     Mathf.Sin(((j + theta) * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius));
                 int t4 = points.Count;
-                points.Add(new Vector3(Mathf.Cos(((j + theta) * Mathf.PI) / 180) * radius, 
+                points.Add(new Vector3(Mathf.Cos(((j + theta) * Mathf.PI) / 180) * Mathf.Cos((i+phi) * Mathf.PI / 180) * radius, 
                     Mathf.Sin((i + phi) * Mathf.PI / 180) * radius, 
                     Mathf.Sin(((j + theta) * Mathf.PI) / 180) * Mathf.Cos((i + phi) * Mathf.PI / 180) * radius));
 
