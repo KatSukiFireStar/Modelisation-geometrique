@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -7,7 +8,7 @@ public class CreateCone : MonoBehaviour
 	private int radius, hauteur, nbMeridiens;
 
 	[SerializeField]
-	[Tooltip("Si hauteur le cone ne sera pas tronqué")]
+	[Tooltip("Si hauteurTronquage == hauteur le cone ne sera pas tronqué")]
 	private int hauteurTronquage;
     
 	[SerializeField]
@@ -29,6 +30,13 @@ public class CreateCone : MonoBehaviour
 		float topY = hauteurTronquage;
 		float bottomY = 0;
 		
+		float z = Mathf.Sqrt(Mathf.Pow(hauteurTronquage - hauteur, 2) * Mathf.Pow(radius, 2) / Mathf.Pow(hauteur, 2));
+
+		Vector3 point = new(0, hauteurTronquage, z);
+		Vector3 point2 =  new(0, hauteurTronquage, 0);
+		
+		float rTop = Mathf.Sqrt(Mathf.Pow(point2.x - point.x, 2) + Mathf.Pow(point2.y - point.y, 2) + Mathf.Pow(point2.z - point.z, 2));
+		
 		int indCenterTop = points.Count;
 		points.Add(new(0, topY, 0));
 		int indCenterBot = points.Count;
@@ -39,11 +47,11 @@ public class CreateCone : MonoBehaviour
 			int t1 = points.Count;
 			points.Add(new Vector3(Mathf.Cos((i * Mathf.PI)/180)*radius, bottomY, Mathf.Sin((i * Mathf.PI)/180)*radius));
 			int t2 = points.Count;
-			points.Add(new Vector3(Mathf.Cos((i * Mathf.PI)/180)*radius, topY, Mathf.Sin((i * Mathf.PI)/180)*radius));
+			points.Add(new Vector3(Mathf.Cos((i * Mathf.PI)/180)*rTop, topY, Mathf.Sin((i * Mathf.PI)/180)*rTop));
 			int t3 = points.Count;
 			points.Add(new Vector3(Mathf.Cos(((i + theta) * Mathf.PI)/180)*radius, bottomY, Mathf.Sin(((i + theta) * Mathf.PI)/180)*radius));
 			int t4 = points.Count;
-			points.Add(new Vector3(Mathf.Cos(((i + theta) * Mathf.PI)/180)*radius, topY, Mathf.Sin(((i + theta) * Mathf.PI)/180)*radius));
+			points.Add(new Vector3(Mathf.Cos(((i + theta) * Mathf.PI)/180)*rTop, topY, Mathf.Sin(((i + theta) * Mathf.PI)/180)*rTop));
 
 			if (hauteurTronquage < hauteur)
 			{

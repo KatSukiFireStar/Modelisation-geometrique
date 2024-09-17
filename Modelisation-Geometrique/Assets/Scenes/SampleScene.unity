@@ -385,9 +385,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 1
-  hauteur: 3
+  hauteur: 4
   nbMeridiens: 50
-  hauteurTronquage: 2
+  hauteurTronquage: 3
   material: {fileID: 2100000, guid: b6a1e68dfa8b3c54b9d30b1ddec50825, type: 2}
 --- !u!4 &1114222410
 Transform:
