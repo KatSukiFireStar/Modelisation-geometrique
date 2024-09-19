@@ -482,9 +482,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 1
-  nbMeridiens: 30
-  nbParalleles: 30
-  radiusTronquage: 30
+  nbMeridiens: 50
+  nbParalleles: 50
+  radiusTronquage: 75
   material: {fileID: 2100000, guid: b6a1e68dfa8b3c54b9d30b1ddec50825, type: 2}
 --- !u!4 &1859827699
 Transform:
