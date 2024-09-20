@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class CreatePacMan : MonoBehaviour
 {
-    [SerializeField] private int radius, nbMeridiens, nbParalleles, radiusTronquage;
+    [SerializeField] private int radius, nbMeridiens, nbParalleles, angleTronquage;
 
     [SerializeField] private Material material;
 
@@ -29,16 +29,17 @@ public class CreatePacMan : MonoBehaviour
 
         for (float i = -90 + phi; i < 90 - phi; i += phi)
         {
-            for (float j = radiusTronquage / 2; j < 360; j += theta)
+            for (float j = angleTronquage / 2; j < 360; j += theta)
             {
-                if ((360 - radiusTronquage / 2) > j)
+                if ((360 - angleTronquage / 2) > j && (360 - angleTronquage / 2 > j + theta))
                 {
                     int t1 = points.Count;
                     points.Add(new Vector3(Mathf.Cos((j * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius,
                         Mathf.Sin(i * Mathf.PI / 180) * radius,
                         Mathf.Sin((j * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius));
                     int t2 = points.Count;
-                    points.Add(new Vector3(Mathf.Cos((j * Mathf.PI) / 180) * Mathf.Cos((i + phi) * Mathf.PI / 180) * radius,
+                    points.Add(new Vector3(
+                        Mathf.Cos((j * Mathf.PI) / 180) * Mathf.Cos((i + phi) * Mathf.PI / 180) * radius,
                         Mathf.Sin((i + phi) * Mathf.PI / 180) * radius,
                         Mathf.Sin((j * Mathf.PI) / 180) * Mathf.Cos((i + phi) * Mathf.PI / 180) * radius));
                     int t3 = points.Count;
@@ -67,47 +68,88 @@ public class CreatePacMan : MonoBehaviour
                     {
                         triangles.AddRange(new int[] { t2, indNorthPole, t4 });
                     }
+                }else if ((360 - angleTronquage / 2) > j && !(360 - angleTronquage / 2 > j + theta))
+                {
+                    int t1 = points.Count;
+                    points.Add(new Vector3(Mathf.Cos((j * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius,
+                        Mathf.Sin(i * Mathf.PI / 180) * radius,
+                        Mathf.Sin((j * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius));
+                    int t2 = points.Count;
+                    points.Add(new Vector3(
+                        Mathf.Cos((j * Mathf.PI) / 180) * Mathf.Cos((i + phi) * Mathf.PI / 180) * radius,
+                        Mathf.Sin((i + phi) * Mathf.PI / 180) * radius,
+                        Mathf.Sin((j * Mathf.PI) / 180) * Mathf.Cos((i + phi) * Mathf.PI / 180) * radius));
+                    int t3 = points.Count;
+                    points.Add(new Vector3(
+                        Mathf.Cos(((360 - angleTronquage / 2) * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius,
+                        Mathf.Sin(i * Mathf.PI / 180) * radius,
+                        Mathf.Sin(((360 - angleTronquage / 2) * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius));
+                    int t4 = points.Count;
+                    points.Add(new Vector3(
+                        Mathf.Cos(((360 - angleTronquage / 2) * Mathf.PI) / 180) * Mathf.Cos((i + phi) * Mathf.PI / 180) * radius,
+                        Mathf.Sin((i + phi) * Mathf.PI / 180) * radius,
+                        Mathf.Sin(((360 - angleTronquage / 2) * Mathf.PI) / 180) * Mathf.Cos((i + phi) * Mathf.PI / 180) * radius));
+
+                    if (i != 90 - phi)
+                    {
+                        triangles.AddRange(new int[] { t1, t2, t3 });
+                        triangles.AddRange(new int[] { t4, t3, t2 });
+                    }
+
+                    if (i == (-90 + phi))
+                    {
+                        triangles.AddRange(new int[] { t1, t3, indSouthPole });
+                    }
+
+                    if (i >= 90 - (2 * phi))
+                    {
+                        triangles.AddRange(new int[] { t2, indNorthPole, t4 });
+                    }
                 }
             }
         }
 
-        float startAngle = (360 - radiusTronquage / 2);
-        float endAngle = radiusTronquage / 2;
-
-        for (float i = -90 + phi; i < 90 - phi; i += phi)
+        if (angleTronquage != 0)
         {
-            int t1 = points.Count;
-            points.Add(new Vector3(0, Mathf.Sin(i * Mathf.PI / 180) * radius, 0));
-            int t2 = points.Count;
-            points.Add(new Vector3(0, Mathf.Sin((i + phi) * Mathf.PI / 180) * radius, 0));
-            int t3 = points.Count;
-            points.Add(new Vector3(
-                Mathf.Cos(((startAngle) * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius,
-                Mathf.Sin(i * Mathf.PI / 180) * radius,
-                Mathf.Sin(((startAngle) * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius));
-            int t4 = points.Count;
-            points.Add(new Vector3(
-                Mathf.Cos(((startAngle) * Mathf.PI) / 180) * Mathf.Cos((i + phi) * Mathf.PI / 180) * radius,
-                Mathf.Sin((i + phi) * Mathf.PI / 180) * radius,
-                Mathf.Sin(((startAngle) * Mathf.PI) / 180) * Mathf.Cos((i + phi) * Mathf.PI / 180) * radius));
-            
-            int t5 = points.Count;
-            points.Add(new Vector3(
-                Mathf.Cos(((endAngle) * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius,
-                Mathf.Sin(i * Mathf.PI / 180) * radius,
-                Mathf.Sin(((endAngle) * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius));
-            int t6 = points.Count;
-            points.Add(new Vector3(
-                Mathf.Cos(((endAngle) * Mathf.PI) / 180) * Mathf.Cos((i + phi) * Mathf.PI / 180) * radius,
-                Mathf.Sin((i + phi) * Mathf.PI / 180) * radius,
-                Mathf.Sin(((endAngle) * Mathf.PI) / 180) * Mathf.Cos((i + phi) * Mathf.PI / 180) * radius));
-            
-            triangles.AddRange(new int[] { t1, t3, t2 });
-            triangles.AddRange(new int[] { t4, t2, t3 });
-            
-            triangles.AddRange(new int[] { t1, t2, t5 });
-            triangles.AddRange(new int[] { t6, t5, t2 });
+            float startAngle = (360 - angleTronquage / 2);
+            float endAngle = angleTronquage / 2;
+
+            for (float i = -90 + phi; i < 90 - phi; i += phi)
+            {
+                int t1 = points.Count;
+                points.Add(new Vector3(0, Mathf.Sin(i * Mathf.PI / 180) * radius, 0));
+                int t2 = points.Count;
+                points.Add(new Vector3(0, Mathf.Sin((i + phi) * Mathf.PI / 180) * radius, 0));
+                int t3 = points.Count;
+                points.Add(new Vector3(
+                    Mathf.Cos(((startAngle) * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius,
+                    Mathf.Sin(i * Mathf.PI / 180) * radius,
+                    Mathf.Sin(((startAngle) * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius));
+                int t4 = points.Count;
+                points.Add(new Vector3(
+                    Mathf.Cos(((startAngle) * Mathf.PI) / 180) * Mathf.Cos((i + phi) * Mathf.PI / 180) * radius,
+                    Mathf.Sin((i + phi) * Mathf.PI / 180) * radius,
+                    Mathf.Sin(((startAngle) * Mathf.PI) / 180) * Mathf.Cos((i + phi) * Mathf.PI / 180) * radius));
+
+                int t5 = points.Count;
+                points.Add(new Vector3(
+                    Mathf.Cos(((endAngle) * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius,
+                    Mathf.Sin(i * Mathf.PI / 180) * radius,
+                    Mathf.Sin(((endAngle) * Mathf.PI) / 180) * Mathf.Cos((i) * Mathf.PI / 180) * radius));
+                int t6 = points.Count;
+                points.Add(new Vector3(
+                    Mathf.Cos(((endAngle) * Mathf.PI) / 180) * Mathf.Cos((i + phi) * Mathf.PI / 180) * radius,
+                    Mathf.Sin((i + phi) * Mathf.PI / 180) * radius,
+                    Mathf.Sin(((endAngle) * Mathf.PI) / 180) * Mathf.Cos((i + phi) * Mathf.PI / 180) * radius));
+
+                triangles.AddRange(new int[] { t1, t3, t2 });
+                triangles.AddRange(new int[] { t4, t2, t3 });
+
+                triangles.AddRange(new int[] { t1, t2, t5 });
+                triangles.AddRange(new int[] { t6, t5, t2 });
+            }
         }
+
 
         MeshFilter filter = gameObject.AddComponent<MeshFilter>();
         Mesh mesh = filter.mesh;

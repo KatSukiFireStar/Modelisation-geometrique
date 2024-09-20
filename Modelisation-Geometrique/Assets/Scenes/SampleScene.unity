@@ -434,7 +434,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 1
-  nbMeridiens: 50
+  nbMeridiens: 40
   nbParalleles: 50
   material: {fileID: 2100000, guid: b6a1e68dfa8b3c54b9d30b1ddec50825, type: 2}
 --- !u!4 &1309074529
@@ -484,7 +484,7 @@ MonoBehaviour:
   radius: 1
   nbMeridiens: 50
   nbParalleles: 50
-  radiusTronquage: 75
+  angleTronquage: 73
   material: {fileID: 2100000, guid: b6a1e68dfa8b3c54b9d30b1ddec50825, type: 2}
 --- !u!4 &1859827699
 Transform:
