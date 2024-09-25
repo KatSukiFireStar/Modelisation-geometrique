@@ -19,3 +19,5 @@ Aussi chaque script prend en compte un material qui sera appliquer au mesh rende
 Pour utiliser les scripts, ils faut les attacher à des objets vides et renseigner les diverses variables cités pour chacun.
 
 Pour voir les objets, il faut lancer le jeu et ensuite retourner dans la scene afin de pouvoir se balader.
+
+Pour le TD1 le nom de la scene utilisé comprenant tous mes objets avec mes scripts est la scene: Scene TD1
