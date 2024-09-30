@@ -147,6 +147,18 @@ public class CreatePacMan : MonoBehaviour
 
                 triangles.AddRange(new int[] { t1, t2, t5 });
                 triangles.AddRange(new int[] { t6, t5, t2 });
+                
+                if (i == (-90 + phi))
+                {
+                    triangles.AddRange(new int[] { t1, indSouthPole, t3 });
+                    triangles.AddRange(new int[] { t1, t5, indSouthPole });
+                }
+
+                if (i >= 90 - (2 * phi))
+                {
+                    triangles.AddRange(new int[] { t2, t4, indNorthPole });
+                    triangles.AddRange(new int[] { t2, indNorthPole, t6 });
+                }
             }
         }
 
