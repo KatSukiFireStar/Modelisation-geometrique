@@ -11,16 +11,11 @@ public class CreateMaillage : MonoBehaviour
 	[SerializeField]
 	private Material material;
     
-	private List<Vector3> points = new();
-    
+	private Vector3[] vertices;
 	private List<int> triangles = new();
+	private Vector3[] normals;
 	
 	private Vector3 pointCenter = new();
-	private float maxPointX = float.MinValue;
-	private float maxPointY = float.MinValue;
-	private float maxPointZ = float.MinValue;
-	
-	private float minPointY = float.MaxValue;
 
 	void Start()
 	{
@@ -36,6 +31,7 @@ public class CreateMaillage : MonoBehaviour
 		string[] values = line.Split(' ');
 		int nbPoints = int.Parse(values[0]);
 		int nbTriangles = int.Parse(values[1]);
+		List<Vector3> points = new();
 		
 		for (int i = 0; i < nbPoints; i++)
 		{
@@ -56,23 +52,13 @@ public class CreateMaillage : MonoBehaviour
 				triangles.Add(int.Parse(values[j]));
 			}
 		}
+		vertices = points.ToArray();
 	}
 
 	private void TraceMaillage()
 	{
 		MeshFilter filter = gameObject.AddComponent<MeshFilter>();
 		Mesh mesh = filter.mesh;
-		Vector3[] vertices = points.ToArray();
-
-		// for (int i = 0; i < vertices.Length; i++)
-		// {
-		// 	if (vertices[i].y < minPointY)
-		// 	{
-		// 		minPointY = vertices[i].y;
-		// 	}
-		// }
-		
-		// vertices[i] -= new Vector3(0, minPointY, 0);
 		
 		for (int i = 0; i < vertices.Length; i++)
 		{
@@ -85,35 +71,56 @@ public class CreateMaillage : MonoBehaviour
 			vertices[i] -= pointCenter;
 		}
 		pointCenter -= pointCenter;
-		//
-		// for (int i = 0; i < vertices.Length; i++)
-		// {
-		// 	if (Mathf.Abs(vertices[i].x) > maxPointX)
-		// 	{
-		// 		maxPointX = Mathf.Abs(vertices[i].x);
-		// 	}
-		//
-		// 	if (Mathf.Abs(vertices[i].y) > maxPointY)
-		// 	{
-		// 		maxPointY = Mathf.Abs(vertices[i].y);
-		// 	}
-		//
-		// 	if (Mathf.Abs(vertices[i].z) > maxPointZ)
-		// 	{
-		// 		maxPointZ = Mathf.Abs(vertices[i].z);
-		// 	}
-		// }
-		//
-		//
-		// for (int i = 0; i < vertices.Length; i++)
-		// {
-		// 	vertices[i].x /= maxPointX;
-		// 	vertices[i].y /= maxPointY;
-		// 	vertices[i].z /= maxPointZ;
-		// }
+		
+		Vector3 max = new(0,0,0);
+		float maxF = float.MinValue;
+		for (int i = 0; i < vertices.Length; i++)
+		{
+			if (maxF < vertices[i].magnitude)
+			{
+				max = vertices[i];
+				maxF = vertices[i].magnitude;
+			}
+		}
+		for (int i = 0; i < vertices.Length; i++)
+		{
+			vertices[i] /= max.magnitude;
+		}
+		
+
+		normals = new Vector3[vertices.Length];
+		int[] count = new int[vertices.Length];
+		for (int i = 0; i < triangles.Count; i+=3)
+		{
+			int[] tab = { triangles[i], triangles[i + 1], triangles[i + 2] };
+			
+			Vector3 a = vertices[tab[0]] - vertices[tab[1]];
+			Vector3 b = vertices[tab[0]] - vertices[tab[2]];
+			Vector3 surfNormal = Vector3.Cross(a, b).normalized;
+
+			for (int j = 0; j < 3; j++)
+			{
+				if (normals[tab[j]].magnitude == 0)
+				{
+					normals[tab[j]] = surfNormal;
+					count[tab[j]] = 1;
+				}
+				else
+				{
+					normals[tab[j]] += surfNormal;
+					count[tab[j]] += 1;
+				}
+			}
+		}
+
+		for (int i = 0; i < normals.Length; i++)
+		{
+			normals[i] = (normals[i] / count[i]).normalized;
+		}
 		
 		mesh.vertices = vertices;
 		mesh.triangles = triangles.ToArray();
+		mesh.normals = normals;
 		mesh.bounds = new Bounds(pointCenter, mesh.bounds.size);
         
 		MeshRenderer meshRenderer = gameObject.AddComponent<MeshRenderer>();
