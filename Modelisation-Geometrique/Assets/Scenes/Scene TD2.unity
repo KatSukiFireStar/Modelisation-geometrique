@@ -243,7 +243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 234ae235c18365a469c3f527055b2eeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fileName: buddha.off
+  fileName: buddha
   material: {fileID: 2100000, guid: b6a1e68dfa8b3c54b9d30b1ddec50825, type: 2}
 --- !u!4 &1330565807
 Transform:

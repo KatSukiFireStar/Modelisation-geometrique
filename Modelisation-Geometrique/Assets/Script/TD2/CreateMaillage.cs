@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using UnityEngine;
@@ -21,11 +22,12 @@ public class CreateMaillage : MonoBehaviour
 	{
 		LoadMaillage();
 		TraceMaillage();
+		WriteMaillage();
 	}
 
 	private void LoadMaillage()
 	{
-		StreamReader reader = new(Path.Combine("Assets/Maillage", fileName), Encoding.ASCII);
+		StreamReader reader = new(Path.Combine("Assets/Maillage", fileName+".off"), Encoding.ASCII);
 		reader.ReadLine();
 		string line = reader.ReadLine();
 		string[] values = line.Split(' ');
@@ -125,6 +127,30 @@ public class CreateMaillage : MonoBehaviour
         
 		MeshRenderer meshRenderer = gameObject.AddComponent<MeshRenderer>();
 		meshRenderer.material = material;
+	}
+
+	private void WriteMaillage()
+	{
+		StreamWriter writer = new(Path.Combine("Assets/Maillage", "new" + fileName + ".obj"));
+		for (int i = 0; i < vertices.Length; i++)
+		{
+			writer.WriteLine("v " + vertices[i].x.ToString(CultureInfo.InvariantCulture) + " " + vertices[i].y.ToString(CultureInfo.InvariantCulture) + " " + vertices[i].z.ToString(CultureInfo.InvariantCulture));
+		}
+		writer.WriteLine();
+		for (int i = 0; i < normals.Length; i++)
+		{
+			writer.WriteLine("vn " + normals[i].x.ToString(CultureInfo.InvariantCulture) + " " + normals[i].y.ToString(CultureInfo.InvariantCulture) + " " + normals[i].z.ToString(CultureInfo.InvariantCulture));
+		}
+		writer.WriteLine();
+		for (int i = 0; i < triangles.Count; i += 3)
+		{
+			string t1 = (triangles[i] + 1).ToString(CultureInfo.InvariantCulture);
+			string t2 = (triangles[i + 1] + 1).ToString(CultureInfo.InvariantCulture);
+			string t3 = (triangles[i + 2] + 1).ToString(CultureInfo.InvariantCulture);
+			writer.WriteLine("f " + t1 + "//" + t1 + " " + t2 + "//" + t2 + " " + t3 + "//" + t3);
+		}
+		writer.Close();
+		Debug.Log("Maillage written");
 	}
 
 }
