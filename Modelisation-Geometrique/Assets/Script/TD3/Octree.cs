@@ -70,6 +70,24 @@ public class Octree
 		
 	}
 
+	private bool isSecant(List<Vector3> vertices, Vector3 center, float radius)
+	{
+		bool inside = false;
+		bool outside = false;
+		foreach (Vector3 vertex in vertices)
+		{
+			if (Vector3.Distance(vertex, center) < radius)
+			{
+				inside = true;
+			}
+			else
+			{
+				outside = true;
+			}
+		}
+		return inside && outside;
+	}
+
 	public bool AddOctree(Octree octree)
 	{
 		if (Voxels.Count == 0)
