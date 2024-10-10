@@ -65,9 +65,49 @@ public class Octree
 		}
 	}
 
-	public void CreateAdaptiveOctree(Vector3 center, float size, int precision)
+	public void CreateAdaptiveOctree(Vector3 center, float size, int precision, Vector3 centerSphere, float radius, bool forced = true)
 	{
+		if (precision == 1)
+		{
+			bool add = AddVoxel(new(new(center.x - size / 2, center.y - size / 2, center.z - size / 2), new(center.x + size / 2, center.y + size / 2, center.z + size / 2)));
+			if (!add)
+			{
+				Debug.LogError("This octree can't add voxels");
+			}
+			return;
+		}
 		
+		List<Vector3> vertices = new List<Vector3>();
+		vertices.Add(new Vector3(center.x + size / 2, center.y + size / 2, center.z + size / 2));
+		vertices.Add(new Vector3(center.x + size / 2, center.y + size / 2, center.z - size / 2));
+		vertices.Add(new Vector3(center.x + size / 2, center.y - size / 2, center.z + size / 2));
+		vertices.Add(new Vector3(center.x + size / 2, center.y - size / 2, center.z - size / 2));
+		vertices.Add(new Vector3(center.x - size / 2, center.y + size / 2, center.z + size / 2));
+		vertices.Add(new Vector3(center.x - size / 2, center.y + size / 2, center.z - size / 2));
+		vertices.Add(new Vector3(center.x - size / 2, center.y - size / 2, center.z + size / 2));
+		vertices.Add(new Vector3(center.x - size / 2, center.y - size / 2, center.z - size / 2));
+		if (!forced && (precision == 2 || !isSecant(vertices, centerSphere, radius)))
+		{
+			bool add = AddVoxel(new(new(center.x - size / 2, center.y - size / 2, center.z - size / 2), new(center.x + size / 2, center.y + size / 2, center.z + size / 2)));
+			if (!add)
+			{
+				Debug.LogError("This octree can't add voxels");
+			}
+		}
+		else
+		{
+			foreach (Vector3 vertex in vertices)
+			{
+				Octree newOctree = new();
+				bool add = AddOctree(newOctree);
+				if (!add)
+				{
+					Debug.LogError("This octree can't add octree");
+					return;
+				}
+				newOctree.CreateAdaptiveOctree(new((vertex.x + center.x) / 2, (vertex.y + center.y) / 2, (vertex.z + center.z) / 2), size / 2, precision - 1, centerSphere, radius, false);
+			}
+		}
 	}
 
 	private bool isSecant(List<Vector3> vertices, Vector3 center, float radius)
