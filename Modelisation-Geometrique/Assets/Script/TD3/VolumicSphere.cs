@@ -18,7 +18,7 @@ public class VolumicSphere : MonoBehaviour
 	private void Start()
 	{
 		Octree octree = new Octree();
-		octree.CreateRegularOctree(center, radius * 2, precision-1);
+		octree.CreateRegularOctree(center, radius * 2, precision);
 		FiledOctree(octree);
 	}
 	

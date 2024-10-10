@@ -17,7 +17,7 @@ public class Octree
 
 	public void CreateRegularOctree(Vector3 center, float size, int precision)
 	{
-		if (precision == 0)
+		if (precision == 1)
 		{
 			bool add = AddVoxel(new(new(center.x - size / 2, center.y - size / 2, center.z - size / 2), new(center.x + size / 2, center.y + size / 2, center.z + size / 2)));
 			if (!add)
@@ -36,11 +36,12 @@ public class Octree
 		vertices.Add(new Vector3(center.x - size / 2, center.y + size / 2, center.z - size / 2));
 		vertices.Add(new Vector3(center.x - size / 2, center.y - size / 2, center.z + size / 2));
 		vertices.Add(new Vector3(center.x - size / 2, center.y - size / 2, center.z - size / 2));
-		if (precision == 1)
+		if (precision == 2)
 		{
 			foreach (Vector3 vertex in vertices)
 			{
-				bool add = AddVoxel(new(new(center.x - size / 2, center.y - size / 2, center.z - size / 2), new(center.x + size / 2, center.y + size / 2, center.z + size / 2)));
+				Vector3 cen = new((vertex.x + center.x)/2, (vertex.y + center.y)/2, (vertex.z + center.z)/2);
+				bool add = AddVoxel(new(new(cen.x - size / 4, cen.y - size / 4, cen.z - size / 4), new(cen.x + size / 4, cen.y + size / 4, cen.z + size / 4)));
 				if (!add)
 				{
 					Debug.LogError("This octree can't add voxels");
