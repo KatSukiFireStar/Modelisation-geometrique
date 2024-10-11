@@ -11,8 +11,7 @@ public class VolumicSphere : MonoBehaviour
     [SerializeField] private int precision;
     
     [Header("Sphere information")]
-    [SerializeField] private List<int> radius = new();
-    [SerializeField] private List<Vector3> centers = new();
+    [SerializeField] private List<Sphere> spheres = new();
     
     [Header("Operator")]
     [SerializeField] private bool doIntersection;
@@ -20,27 +19,23 @@ public class VolumicSphere : MonoBehaviour
     private void Start()
     {
         List<Octree> octrees = new();
-        if (radius.Count != centers.Count)
-        {
-            Debug.LogError("Radius and Centers must have the same number of elements.");
-        }
         
-        for (int i = 0; i < centers.Count; i++)
+        for (int i = 0; i < spheres.Count; i++)
         {
             Octree octree = new Octree();
             octrees.Add(octree);
             if (adaptiveOctree)
             {
-                octree.CreateAdaptiveOctree(centers[i], radius[i] * 2, precision, centers[i], radius[i]);
+                octree.CreateAdaptiveOctree(spheres[i].Position, spheres[i].Radius * 2, precision, spheres[i].Position, spheres[i].Radius);
             }
             else
             {
-                octree.CreateRegularOctree(centers[i], radius[i] * 2, precision);
+                octree.CreateRegularOctree(spheres[i].Position, spheres[i].Radius * 2, precision);
             }
 
             if (!doIntersection)
             {
-               FiledOctree(centers[i], radius[i], octree);
+               FiledOctree(spheres[i].Position, spheres[i].Radius, octree);
             }
         }
 
@@ -64,9 +59,9 @@ public class VolumicSphere : MonoBehaviour
             foreach (Voxel v in octree.Voxels)
             {
                 bool add = true;
-                for (int i = 0; i < centers.Count; i++)
+                for (int i = 0; i < spheres.Count; i++)
                 {
-                    if (Vector3.Distance(centers[i], v.Center) > radius[i])
+                    if (Vector3.Distance(spheres[i].Position, v.Center) > spheres[i].Radius)
                     {
                         add = false;
                     }
@@ -81,7 +76,7 @@ public class VolumicSphere : MonoBehaviour
     }
 
 
-    private void FiledOctree(Vector3 center, int radius, Octree octree)
+    private void FiledOctree(Vector3 center, float radius, Octree octree)
     {
         if (octree.isOctreeParent)
         {
