@@ -21,11 +21,24 @@ public class VolumicSphere : MonoBehaviour
     [Header("Operator")]
     [SerializeField]
     private bool doIntersection;
+    [SerializeField] 
+    private bool doUnion;
 
     private void Start()
     {
-        List<Octree> octrees = new();
+        if (doUnion && doIntersection)
+        {
+            Debug.LogError("Vous ne pouvez pas faire d'union et d'intersection en meme temps");
+            return;
+        }
 
+        if (adaptiveOctree && (doIntersection || doUnion))
+        {
+            Debug.LogWarning("Attention, les octrees adaptatifs et les operateurs ne marchent pas très bien!");
+        }
+        
+        List<Octree> octrees = new();
+        
         for (int i = 0; i < spheres.Count; i++)
         {
             Octree octree = new Octree();
@@ -39,16 +52,24 @@ public class VolumicSphere : MonoBehaviour
             {
                 octree.CreateRegularOctree(spheres[i].Position, spheres[i].Radius * 2, precision);
             }
-
-            if (!doIntersection)
+        
+            if (!doIntersection && !doUnion)
             {
                 FiledOctree(spheres[i].Position, spheres[i].Radius, octree);
             }
         }
-
+        
         if (doIntersection)
         {
             FiledOctreeIntersection(octrees[0]);
+        }
+
+        if (doUnion)
+        {
+            foreach (Octree octree in octrees)
+            {
+                FiledOctreeUnion(octree);
+            }
         }
     }
 
@@ -71,6 +92,42 @@ public class VolumicSphere : MonoBehaviour
                     if (Vector3.Distance(spheres[i].Position, v.Center) > spheres[i].Radius)
                     {
                         add = false;
+                    }
+                }
+
+                if (add)
+                {
+                    cube.transform.localScale = Vector3.one * (v.PointMax - v.PointMin).x;
+                    Instantiate(cube, v.Center, Quaternion.identity, transform);
+                }
+            }
+        }
+    }
+    
+    private void FiledOctreeUnion(Octree octree)
+    {
+        if (octree.isOctreeParent)
+        {
+            foreach (Octree o in octree.Octrees)
+            {
+                FiledOctreeUnion(o);
+            }
+        }
+        else if (octree.isVoxelParent)
+        {
+            foreach (Voxel v in octree.Voxels)
+            {
+                bool add = false;
+                for (int i = 0; i < spheres.Count; i++)
+                {
+                    if (!add && Vector3.Distance(spheres[i].Position, v.Center) < spheres[i].Radius)
+                    {
+                        add = true;
+                    }
+                    else if (add && Vector3.Distance(spheres[i].Position, v.Center) < spheres[i].Radius)
+                    {
+                        add = false;
+                        break;
                     }
                 }
 

@@ -152,12 +152,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cube: {fileID: 6127348159224283179, guid: c525d9cf1f56ae647b8dcd28a7caa712, type: 3}
-  adaptiveOctree: 1
+  adaptiveOctree: 0
   precision: 5
   spheres:
   - position: {x: 0, y: 0, z: 0}
     radius: 1
+  - position: {x: 1, y: 0, z: 0}
+    radius: 1
   doIntersection: 0
+  doUnion: 1
 --- !u!4 &52114212
 Transform:
   m_ObjectHideFlags: 0
