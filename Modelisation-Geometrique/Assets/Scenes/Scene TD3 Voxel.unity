@@ -160,7 +160,7 @@ MonoBehaviour:
   - position: {x: 1, y: 0, z: 0}
     radius: 1
   doIntersection: 0
-  doUnion: 1
+  doUnion: 0
 --- !u!4 &52114212
 Transform:
   m_ObjectHideFlags: 0
