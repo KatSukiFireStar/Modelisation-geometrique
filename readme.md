@@ -32,3 +32,19 @@ A la fin de chaque lecture pour l'objet, il le réecrira dans le format obj au m
 Pour voir les objets, il faut lancer le jeu et ensuite retourner dans la scene afin de pouvoir se balader.
 
 Pour ce TD, la scène utilisé porte le nom: Scene TD2
+
+## TD3
+
+Ce TD 3 comprend plusieurs script. Plusieurs d'entres eux sont des classes permettant le stockage de mes informations et les autres, la création de mes objets.
+Les 3 classes sont les suivantes:
+- Sphere: Contient toutes les informations relatives à la sphere.
+- Voxel: Chaque voxel contient plusieurs coordonnées. Le point max, le point min et le centre. Les voxels contiennent aussi un potentiel.
+- Octree: Contient ma structure permettant la création d'octree. Ce script comprent 2 listes. La premiere est une liste d'octree fils et la seconde est une liste de voxels fils. Ce script comprend aussi deux fonctions permettant l'ajout d'octree et de voxels au liste. Cependant, un octree ne peut etre ajouté à la liste que ssi la liste de voxel est vide et inversement pour les ajouts de voxels.
+
+Les 2 scripts de création sont les suivants:
+- VolumicSphere: Permet la création d'une (ou plusieurs) sphere volumique. Chaque sphere possède ses informations de position et leurs radius. Il y a aussi plusieurs options d'octree comme créer l'octree en adaptatif ou non et aussi sa précision. Il y a aussi l'implémentation de deux operateur l'intersection et l'union.
+- PotentialTools: Permet la création d'une sphere volumique et ensuite de pouvoir changer le potentiel des voxels. Il y a aussi un tool pouvant se deplacer grâce au touches ZQSDAE. 
+
+Ce TD contient deux scènes permettant l'utilisation de différents outils.
+La premiere scène s'appele Scene TD3 Voxel et montre une création de voxel.
+La deuxième scène s'appele Scene TD3 Tools et montre l'utilisation du potential tool.
