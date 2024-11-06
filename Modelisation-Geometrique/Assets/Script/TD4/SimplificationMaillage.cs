@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -19,7 +20,32 @@ public class SimplificationMaillage : MonoBehaviour
 	private List<int> trianglesStart = new();
 	private Vector3[] normals;
 	private Vector3 pointCenter = new();
-	
+	private Octree octree = new();
+
+	private void Start()
+	{
+		LoadMaillage();
+		NormalizeMaillage();
+		float distMax = float.MinValue;
+		foreach (Vector3 v in verticesStart)
+		{
+			foreach (Vector3 v2 in verticesStart)
+			{
+				if (Vector3.Distance(v, v2) > distMax)
+				{
+					distMax = Vector3.Distance(v, v2);
+				}
+			}
+		}
+		Debug.Log(distMax);
+		octree.CreateRegularOctree(transform.position, distMax, precision);
+		Vector3[] vertices;
+		List<int> triangles;
+
+		(vertices, triangles) = CreateNewMaillage();
+		TraceMaillagePrecision(vertices, triangles);
+	}
+
 	private void LoadMaillage()
 	{
 		StreamReader reader = new(Path.Combine("Assets/Maillage", fileName+".off"), Encoding.ASCII);
@@ -52,11 +78,103 @@ public class SimplificationMaillage : MonoBehaviour
 		verticesStart = points.ToArray();
 	}
 
-	private void TraceMaillagePrecision()
+	private (Vector3[], List<int>) CreateNewMaillage()
 	{
-		MeshFilter filter = gameObject.AddComponent<MeshFilter>();
-		Mesh mesh = filter.mesh;
+		List<Vector3> vertices = new();
+		List<int> triangles = new();
 		
+		triangles.AddRange(trianglesStart);
+		
+		List<Voxel> voxels = new();
+		voxels = octree.GetAllVoxels();
+
+		Dictionary<int, int> newIndice = new();
+
+		for (int i = 0; i < verticesStart.Length; i++)
+		{
+			newIndice[i] = -1;
+		}
+		
+		foreach (Voxel voxel in voxels)
+		{
+			List<(Vector3, int)> pointsInBox = new();
+			for (int i = 0; i  < verticesStart.Length; i++)
+			{
+				Vector3 v = verticesStart[i];
+				if (PointInBox(v, voxel.PointMin, voxel.PointMax))
+				{
+					pointsInBox.Add((v, i));
+				}
+			}
+			
+			if(pointsInBox.Count == 0)
+				continue;
+
+			Vector3 center = new();
+			foreach ((Vector3, int) v in pointsInBox)
+			{
+				center += v.Item1;
+			}
+			center /= pointsInBox.Count;
+			
+			int ind = vertices.Count;
+			vertices.Add(center);
+
+			for (int i = 0; i < verticesStart.Length; i++)
+			{
+				foreach ((Vector3, int) v in pointsInBox)
+				{
+					if (i == v.Item2)
+					{
+						newIndice[i] = ind;
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < triangles.Count; i++)
+		{
+			foreach (int j in newIndice.Keys)
+			{
+				if (triangles[i] == j)
+				{
+					triangles[i] = newIndice[j];
+					break;
+				}
+			}
+		}
+
+		List<int> trianglesToReturn = new();
+		for (int i = 0; i < triangles.Count; i+=3)
+		{
+			if (triangles[i] == triangles[i + 1] && triangles[i] == triangles[i + 2])
+			{
+				continue;
+			}
+			trianglesToReturn.Add(triangles[i]);
+			trianglesToReturn.Add(triangles[i + 1]);
+			trianglesToReturn.Add(triangles[i + 2]);
+		}
+		
+		return (vertices.ToArray(), trianglesToReturn);
+	}
+
+	private bool PointInBox(Vector3 point, Vector3 pointMinBox, Vector3 pointMaxBox)
+	{
+		if(point.x < pointMinBox.x || point.x > pointMaxBox.x)
+			return false;
+		
+		if(point.y < pointMinBox.y || point.y > pointMaxBox.y)
+			return false;
+		
+		if(point.z < pointMinBox.z || point.z > pointMaxBox.z)
+			return false;
+		
+		return true;
+	}
+
+	private void NormalizeMaillage()
+	{
 		for (int i = 0; i < verticesStart.Length; i++)
 		{
 			pointCenter += verticesStart[i];
@@ -114,9 +232,40 @@ public class SimplificationMaillage : MonoBehaviour
 		{
 			normals[i] = (normals[i] / count[i]).normalized;
 		}
+	}
+
+	private void TraceMaillagePrecision(Vector3[] vertices, List<int> triangles)
+	{
+		MeshFilter filter = gameObject.AddComponent<MeshFilter>();
+		Mesh mesh = filter.mesh;
 		
-		mesh.vertices = verticesStart;
-		mesh.triangles = trianglesStart.ToArray();
+		normals = new Vector3[vertices.Length];
+		int[] count = new int[vertices.Length];
+		for (int i = 0; i < triangles.Count; i+=3)
+		{
+			int[] tab = { triangles[i], triangles[i + 1], triangles[i + 2] };
+			
+			Vector3 a = vertices[tab[0]] - vertices[tab[1]];
+			Vector3 b = vertices[tab[0]] - vertices[tab[2]];
+			Vector3 surfNormal = Vector3.Cross(a, b).normalized;
+
+			for (int j = 0; j < 3; j++)
+			{
+				if (normals[tab[j]].magnitude == 0)
+				{
+					normals[tab[j]] = surfNormal;
+					count[tab[j]] = 1;
+				}
+				else
+				{
+					normals[tab[j]] += surfNormal;
+					count[tab[j]] += 1;
+				}
+			}
+		}
+		
+		mesh.vertices = vertices;
+		mesh.triangles = triangles.ToArray();
 		mesh.normals = normals;
 		mesh.bounds = new Bounds(pointCenter, mesh.bounds.size);
         
@@ -124,12 +273,12 @@ public class SimplificationMaillage : MonoBehaviour
 		meshRenderer.material = material;
 	}
 
-	private void WriteMaillage()
+	private void WriteMaillage(Vector3[] vertices, List<int> triangles)
 	{
 		StreamWriter writer = new(Path.Combine("Assets/Maillage", "new" + fileName + ".obj"));
-		for (int i = 0; i < verticesStart.Length; i++)
+		for (int i = 0; i < vertices.Length; i++)
 		{
-			writer.WriteLine("v " + verticesStart[i].x.ToString(CultureInfo.InvariantCulture) + " " + verticesStart[i].y.ToString(CultureInfo.InvariantCulture) + " " + verticesStart[i].z.ToString(CultureInfo.InvariantCulture));
+			writer.WriteLine("v " + vertices[i].x.ToString(CultureInfo.InvariantCulture) + " " + vertices[i].y.ToString(CultureInfo.InvariantCulture) + " " + vertices[i].z.ToString(CultureInfo.InvariantCulture));
 		}
 		writer.WriteLine();
 		for (int i = 0; i < normals.Length; i++)
@@ -137,11 +286,11 @@ public class SimplificationMaillage : MonoBehaviour
 			writer.WriteLine("vn " + normals[i].x.ToString(CultureInfo.InvariantCulture) + " " + normals[i].y.ToString(CultureInfo.InvariantCulture) + " " + normals[i].z.ToString(CultureInfo.InvariantCulture));
 		}
 		writer.WriteLine();
-		for (int i = 0; i < trianglesStart.Count; i += 3)
+		for (int i = 0; i < triangles.Count; i += 3)
 		{
-			string t1 = (trianglesStart[i] + 1).ToString(CultureInfo.InvariantCulture);
-			string t2 = (trianglesStart[i + 1] + 1).ToString(CultureInfo.InvariantCulture);
-			string t3 = (trianglesStart[i + 2] + 1).ToString(CultureInfo.InvariantCulture);
+			string t1 = (triangles[i] + 1).ToString(CultureInfo.InvariantCulture);
+			string t2 = (triangles[i + 1] + 1).ToString(CultureInfo.InvariantCulture);
+			string t3 = (triangles[i + 2] + 1).ToString(CultureInfo.InvariantCulture);
 			writer.WriteLine("f " + t1 + "//" + t1 + " " + t2 + "//" + t2 + " " + t3 + "//" + t3);
 		}
 		writer.Close();

@@ -15,6 +15,28 @@ public class Octree
 		Voxels = new List<Voxel>();
 	}
 
+	public List<Voxel> GetAllVoxels()
+	{
+		List<Voxel> voxel = new();
+		List<Octree> next = new();
+		next.AddRange(Octrees);
+		while (next.Count > 0)
+		{
+			Octree nextOctree = next[0];
+			next.RemoveAt(0);
+
+			if (nextOctree.isOctreeParent)
+			{
+				next.AddRange(nextOctree.Octrees);
+			}
+			else
+			{
+				voxel.AddRange(nextOctree.Voxels);
+			}
+		}
+		return voxel;
+	}
+
 	public void CreateRegularOctree(Vector3 center, float size, int precision)
 	{
 		if (precision == 1)
