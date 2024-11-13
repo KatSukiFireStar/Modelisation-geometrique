@@ -48,3 +48,12 @@ Les 2 scripts de création sont les suivants:
 Ce TD contient deux scènes permettant l'utilisation de différents outils.
 La premiere scène s'appele Scene TD3 Voxel et montre une création de voxel.
 La deuxième scène s'appele Scene TD3 Tools et montre l'utilisation du potential tool.
+
+## TD4
+
+Ce TD4 comprend un script permettant la simplification d'un maillage. Pour ce faire, il faut accrocher le script à un objet vide et lui specifiez les informations suivantes:
+- Precision de l'octree : Precision de la découpe du noyveau maillage. Plus ce chiffre est élévé et plus le maillage sera précis
+- Material : Le matériau à attacher au mesh
+- Filename : Le nom du fichier dans le dossier "Assets/Maillage". Attention ce fichier doit être au format off
+
+Ce TD contient une seul et unique scène nommer Scene TD4.
