@@ -154,9 +154,28 @@ public class SimplificationMaillage : MonoBehaviour
 			{
 				continue;
 			}
-			trianglesToReturn.Add(triangles[i]);
-			trianglesToReturn.Add(triangles[i + 1]);
-			trianglesToReturn.Add(triangles[i + 2]);
+
+			int count = 0;
+			for (int j = 0; j < trianglesToReturn.Count; j += 3)
+			{
+				if ((triangles[i] == trianglesToReturn[j] || triangles[i] == trianglesToReturn[j + 1] ||
+				     triangles[i] == trianglesToReturn[j + 2]) &&
+				    (triangles[i + 1] == trianglesToReturn[j] || triangles[i + 1] == trianglesToReturn[j + 1] ||
+				     triangles[i + 1] == trianglesToReturn[j + 2]) &&
+				    (triangles[i + 2] == trianglesToReturn[j] || triangles[i + 2] == trianglesToReturn[j + 1] ||
+				     triangles[i + 2] == trianglesToReturn[j + 2]))
+				{
+					count++;
+				}
+			}
+
+			if (count == 0)
+			{
+				trianglesToReturn.Add(triangles[i]);
+				trianglesToReturn.Add(triangles[i + 1]);
+				trianglesToReturn.Add(triangles[i + 2]);
+			}
+			
 		}
 		
 		return (vertices.ToArray(), trianglesToReturn);
@@ -164,13 +183,13 @@ public class SimplificationMaillage : MonoBehaviour
 
 	private bool PointInBox(Vector3 point, Vector3 pointMinBox, Vector3 pointMaxBox)
 	{
-		if(point.x < pointMinBox.x || point.x > pointMaxBox.x)
+		if(point.x <= pointMinBox.x || point.x > pointMaxBox.x)
 			return false;
 		
-		if(point.y < pointMinBox.y || point.y > pointMaxBox.y)
+		if(point.y <= pointMinBox.y || point.y > pointMaxBox.y)
 			return false;
 		
-		if(point.z < pointMinBox.z || point.z > pointMaxBox.z)
+		if(point.z <= pointMinBox.z || point.z > pointMaxBox.z)
 			return false;
 		
 		return true;
