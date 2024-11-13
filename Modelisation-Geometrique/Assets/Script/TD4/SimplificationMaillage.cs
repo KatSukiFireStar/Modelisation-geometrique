@@ -21,9 +21,12 @@ public class SimplificationMaillage : MonoBehaviour
 	private Vector3[] normals;
 	private Vector3 pointCenter = new();
 	private Octree octree = new();
+	private Vector3 pos;
 
 	private void Start()
 	{
+		pos = transform.position;
+		transform.position = Vector3.zero;
 		LoadMaillage();
 		NormalizeMaillage();
 		float distMax = float.MinValue;
@@ -37,13 +40,13 @@ public class SimplificationMaillage : MonoBehaviour
 				}
 			}
 		}
-		Debug.Log(distMax);
 		octree.CreateRegularOctree(transform.position, distMax, precision);
 		Vector3[] vertices;
 		List<int> triangles;
 
 		(vertices, triangles) = CreateNewMaillage();
 		TraceMaillagePrecision(vertices, triangles);
+		transform.position = pos;
 	}
 
 	private void LoadMaillage()
@@ -147,7 +150,7 @@ public class SimplificationMaillage : MonoBehaviour
 		List<int> trianglesToReturn = new();
 		for (int i = 0; i < triangles.Count; i+=3)
 		{
-			if (triangles[i] == triangles[i + 1] && triangles[i] == triangles[i + 2])
+			if (triangles[i] == triangles[i + 1] || triangles[i] == triangles[i + 2] || triangles[i + 1] == triangles[i + 2])
 			{
 				continue;
 			}
@@ -201,37 +204,6 @@ public class SimplificationMaillage : MonoBehaviour
 		{
 			verticesStart[i] /= max.magnitude;
 		}
-		
-
-		normals = new Vector3[verticesStart.Length];
-		int[] count = new int[verticesStart.Length];
-		for (int i = 0; i < trianglesStart.Count; i+=3)
-		{
-			int[] tab = { trianglesStart[i], trianglesStart[i + 1], trianglesStart[i + 2] };
-			
-			Vector3 a = verticesStart[tab[0]] - verticesStart[tab[1]];
-			Vector3 b = verticesStart[tab[0]] - verticesStart[tab[2]];
-			Vector3 surfNormal = Vector3.Cross(a, b).normalized;
-
-			for (int j = 0; j < 3; j++)
-			{
-				if (normals[tab[j]].magnitude == 0)
-				{
-					normals[tab[j]] = surfNormal;
-					count[tab[j]] = 1;
-				}
-				else
-				{
-					normals[tab[j]] += surfNormal;
-					count[tab[j]] += 1;
-				}
-			}
-		}
-
-		for (int i = 0; i < normals.Length; i++)
-		{
-			normals[i] = (normals[i] / count[i]).normalized;
-		}
 	}
 
 	private void TraceMaillagePrecision(Vector3[] vertices, List<int> triangles)
@@ -263,6 +235,10 @@ public class SimplificationMaillage : MonoBehaviour
 				}
 			}
 		}
+		for (int i = 0; i < normals.Length; i++)
+		{
+			normals[i] = (normals[i] / count[i]).normalized;
+		}
 		
 		mesh.vertices = vertices;
 		mesh.triangles = triangles.ToArray();
@@ -271,29 +247,5 @@ public class SimplificationMaillage : MonoBehaviour
         
 		MeshRenderer meshRenderer = gameObject.AddComponent<MeshRenderer>();
 		meshRenderer.material = material;
-	}
-
-	private void WriteMaillage(Vector3[] vertices, List<int> triangles)
-	{
-		StreamWriter writer = new(Path.Combine("Assets/Maillage", "new" + fileName + ".obj"));
-		for (int i = 0; i < vertices.Length; i++)
-		{
-			writer.WriteLine("v " + vertices[i].x.ToString(CultureInfo.InvariantCulture) + " " + vertices[i].y.ToString(CultureInfo.InvariantCulture) + " " + vertices[i].z.ToString(CultureInfo.InvariantCulture));
-		}
-		writer.WriteLine();
-		for (int i = 0; i < normals.Length; i++)
-		{
-			writer.WriteLine("vn " + normals[i].x.ToString(CultureInfo.InvariantCulture) + " " + normals[i].y.ToString(CultureInfo.InvariantCulture) + " " + normals[i].z.ToString(CultureInfo.InvariantCulture));
-		}
-		writer.WriteLine();
-		for (int i = 0; i < triangles.Count; i += 3)
-		{
-			string t1 = (triangles[i] + 1).ToString(CultureInfo.InvariantCulture);
-			string t2 = (triangles[i + 1] + 1).ToString(CultureInfo.InvariantCulture);
-			string t3 = (triangles[i + 2] + 1).ToString(CultureInfo.InvariantCulture);
-			writer.WriteLine("f " + t1 + "//" + t1 + " " + t2 + "//" + t2 + " " + t3 + "//" + t3);
-		}
-		writer.Close();
-		Debug.Log("Maillage written");
 	}
 }

@@ -216,6 +216,100 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &1230761210
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1230761212}
+  - component: {fileID: 1230761211}
+  m_Layer: 0
+  m_Name: Bunny 3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1230761211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1230761210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6df88652afc7f134995afebe638f29ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  precision: 3
+  material: {fileID: 2100000, guid: b6a1e68dfa8b3c54b9d30b1ddec50825, type: 2}
+  fileName: bunny
+--- !u!4 &1230761212
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1230761210}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1272130795
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1272130797}
+  - component: {fileID: 1272130796}
+  m_Layer: 0
+  m_Name: Bunny 4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1272130796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272130795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6df88652afc7f134995afebe638f29ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  precision: 4
+  material: {fileID: 2100000, guid: b6a1e68dfa8b3c54b9d30b1ddec50825, type: 2}
+  fileName: bunny
+--- !u!4 &1272130797
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272130795}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1382407756
 GameObject:
   m_ObjectHideFlags: 0
@@ -365,7 +459,7 @@ GameObject:
   - component: {fileID: 1787165611}
   - component: {fileID: 1787165610}
   m_Layer: 0
-  m_Name: Bunny
+  m_Name: Bunny 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -383,7 +477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6df88652afc7f134995afebe638f29ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  precision: 4
+  precision: 5
   material: {fileID: 2100000, guid: b6a1e68dfa8b3c54b9d30b1ddec50825, type: 2}
   fileName: bunny
 --- !u!4 &1787165611
@@ -408,4 +502,6 @@ SceneRoots:
   - {fileID: 1382407759}
   - {fileID: 776252417}
   - {fileID: 1787165611}
+  - {fileID: 1272130797}
+  - {fileID: 1230761212}
   - {fileID: 1594011081}
