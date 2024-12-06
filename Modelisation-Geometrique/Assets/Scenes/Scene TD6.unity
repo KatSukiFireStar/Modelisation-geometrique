@@ -122,6 +122,58 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &413623146
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 413623148}
+  - component: {fileID: 413623147}
+  m_Layer: 0
+  m_Name: BezierCurveCasteljau
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &413623147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413623146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7a8ed3bd67e03545b97da2127cde3ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseColor: {r: 0.59607846, g: 0, b: 0, a: 1}
+  curveColor: {r: 0, g: 0.11899313, b: 0.5754717, a: 1}
+  delta: 0.01
+  startPoints:
+  - {x: -2, y: -2, z: 0}
+  - {x: -1, y: 1, z: 0}
+  - {x: 1, y: 1, z: 0}
+  - {x: 2, y: -2, z: 0}
+--- !u!4 &413623148
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413623146}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &575465828
 GameObject:
   m_ObjectHideFlags: 0
@@ -338,7 +390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0.5943396, g: 0, b: 0, a: 1}
-  curveColor: {r: 0.745283, g: 0.42508736, b: 0, a: 1}
+  curveColor: {r: 0.74509805, g: 0.41192734, b: 0, a: 1}
   delta: 0.01
   startPoints:
   - {x: -2, y: -2, z: 0}
@@ -417,4 +469,5 @@ SceneRoots:
   - {fileID: 615178768}
   - {fileID: 575465830}
   - {fileID: 1639938912}
+  - {fileID: 413623148}
   - {fileID: 760130084}

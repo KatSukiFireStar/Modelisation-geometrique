@@ -25,10 +25,7 @@ public class BezierCurve : MonoBehaviour
 		{
 			Gizmos.DrawLine(startPoints[i] + transform.position, startPoints[i + 1] + transform.position);
 		}
-	}
-
-	private void OnDrawGizmosSelected()
-	{
+		
 		curvePoints = new();
 		Gizmos.color = curveColor;
 		float current = delta;

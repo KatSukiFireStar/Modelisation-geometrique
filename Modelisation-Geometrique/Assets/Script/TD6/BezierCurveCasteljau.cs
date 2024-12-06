@@ -24,38 +24,37 @@ public class BezierCurveCasteljau : MonoBehaviour
 		{
 			Gizmos.DrawLine(startPoints[i] + transform.position, startPoints[i + 1] + transform.position);
 		}
-	}
-
-	private void OnDrawGizmosSelected()
-	{
+		
 		curvePoints = new();
 		Gizmos.color = curveColor;
 		float current = delta;
 		curvePoints.Add(startPoints[0]);
+		
 		while (current < 1)
 		{
+			List<Vector3> operationPoints = new();
+			operationPoints.AddRange(startPoints);
 			Vector3 p = new();
-			for (int i = 0; i < startPoints.Count; i++)
+			while (operationPoints.Count > 1)
 			{
-				p += startPoints[i] * Bernstein(i, degree - 1, current);
+				List<Vector3> newPoints = new();
+				for (int i = 0; i < operationPoints.Count - 1; i++)
+				{
+					p = (1 - current) * operationPoints[i] + current * operationPoints[i+1];
+					newPoints.Add(p);
+				}
+				operationPoints = new();
+				operationPoints.AddRange(newPoints);
 			}
-			curvePoints.Add(p);
+			curvePoints.Add(operationPoints[0]);
 			current += delta;
 		}
+		
+		
 		curvePoints.Add(startPoints[startPoints.Count - 1]);
 		for (int i = 0; i < curvePoints.Count - 1; i++)
 		{
 			Gizmos.DrawLine(curvePoints[i] + transform.position, curvePoints[i + 1] + transform.position);
 		}
-	}
-
-	private float Factoriel(int n)
-	{
-		return n > 1?n * Factoriel(n-1):1;
-	}
-
-	private float Bernstein(int i, int n, float t)
-	{
-		return Factoriel(n) / (Factoriel(i) * Factoriel(n-i)) * Mathf.Pow(t, i) * Mathf.Pow(1-t, n-i);
 	}
 }
