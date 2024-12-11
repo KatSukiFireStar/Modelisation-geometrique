@@ -57,3 +57,38 @@ Ce TD4 comprend un script permettant la simplification d'un maillage. Pour ce fa
 - Filename : Le nom du fichier dans le dossier "Assets/Maillage". Attention ce fichier doit être au format off
 
 Ce TD contient une seul et unique scène nommer Scene TD4.
+
+## TD5
+
+Ce TD5 comprend un script permettant la subdivion de ligne. Pour ce faire, il faut accrocher le script à un objet vide et lui specifiez les informations suivantes:
+- StartsPoints : Point de base de la forme 
+- BaseColor : Color reliant les points de la forme de base
+- Precision : Precision de subdivision de la ligne
+- CurveColor : Couleur reliant les points de la forme créer
+
+Ce TD contient une seul et unique scène nommer Scene TD5.
+
+## TD6
+
+Ce TD6 comprend plusieurs script permettant la création de différentes courbes. Pour ce faire voici les différents script et les informations à specifier :
+- HermiteCurve : Permet de creer une courbe d'Hermit
+    - CurveColor : Couleur de base de la ligne
+    - Delta : Interstice de calcul entre 0 et 1
+    - Points :
+        - P0 : Coordonnées du point 0
+        - P1 : Coordonnées du point 1
+    - Tangents :
+        - V0 : Coordonnées de la tangentes au point 0
+        - V1 : Coordonnées de la tangentes au pount 1
+- BezierCurve : Permet de creer une courbe de Bezier
+    - StartsPoints : Point de base de la forme 
+    - BaseColor : Couleur des points de base
+    - CurveColor : Couleur reliant les points de la forme créer
+    - Delta : Interstice de calcul entre 0 et 1
+- BezierCurveCasteljau : Permet de creer une courbe de Bezier avec l'algorithme de De Casteljau
+    - StartsPoints : Point de base de la forme 
+    - BaseColor : Couleur des points de base
+    - CurveColor : Couleur reliant les points de la forme créer
+    - Delta : Interstice de calcul entre 0 et 1
+
+Ce TD contient une seul et unique scène nommer Scene TD6.
